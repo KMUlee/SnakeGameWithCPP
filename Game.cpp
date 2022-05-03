@@ -8,6 +8,9 @@
 #include "Game.hpp"
 
 #define ITEM_TIME 10
+#define GATE_TIME 15
+#define GATE_END 10
+
 
 //constructor
 Game::Game(int row, int column) {
@@ -16,6 +19,7 @@ Game::Game(int row, int column) {
     this -> snake = new Snake(row * column);
     this -> item = new Item(row, column);
     this -> stage = 1;
+    this -> gate_time = 0;
 }
 //setter
 void Game::setMode(int mode) {
@@ -34,6 +38,7 @@ void Game::gameInit(int stage) {
     this -> gate = 0;
     this -> end = 0;
     this -> stage = stage;
+    this -> active_gate = 0;
     //뱀의 크기 초기화
     this -> snake -> setTop(-1);
     //map 초기화
@@ -54,8 +59,35 @@ int Game::GameStart() {
     //시작 측정
     time_t t = time(NULL);
     int min, sec;
+    //
+    start_color();
     
-    while(true) {
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    
+    while(this -> mode == 1) {\
+        clear();
+        this -> drawHowto();
+        getKey = getch();
+        
+        if (getKey == 32) {
+            this -> end = 0;
+            break;
+        }
+    }
+    
+    while (this -> stage == 5) {
+        clear();
+        this -> drawClear();
+        getKey = getch();
+        
+        if (getKey == 32) {
+            this -> end = 0;
+            this -> mode = 1;
+            break;
+        }
+    }
+    
+    while(this -> mode == 0) {
         if (end) {
             break;
         }
@@ -77,6 +109,12 @@ int Game::GameStart() {
             case KEY_RIGHT:
                 this -> snake -> setDirection(0, 1);
                 break;
+            case 32:
+                this -> poison++;
+                this -> growth++;
+                this -> gate++;
+                this -> best++;
+                break;
         }
         //죽음 이벤트
         if (this -> eventDeath()) {
@@ -86,6 +124,20 @@ int Game::GameStart() {
         if ((time(NULL) - t) % ITEM_TIME == 0) {
             this -> map[this -> item -> getX()][this -> item -> getY()] = 0;
             this -> makeItem();
+        }
+        //gate생성
+        if (!this->active_gate && (time(NULL) - t) % GATE_TIME == 0 && time(NULL) - t != 0) {
+            this -> makePotal();
+            this -> check_gate = 0;
+            this -> gate_time = time(NULL) - t;
+        }
+        //시간이 지나면 게이트 닫힘
+        if (time(NULL) - t == this->gate_time + GATE_END) {
+            if (!this -> check_gate) {
+                this ->active_gate = 0;
+                this->map[this->gateX_1][this->gateY_1] = 1;
+                this->map[this->gateX_2][this->gateY_2] = 1;
+            }
         }
         //draw
         this -> drawMap();
@@ -122,6 +174,11 @@ void Game::drawMap() {
                     break;
                 case 4:
                     mvprintw(i + 2, j, "-");
+                    break;
+                case 5:
+                    attron(COLOR_PAIR(1));
+                    mvprintw(i + 2, j, "G");
+                    attroff(COLOR_PAIR(1));
                     break;
                 default:
                     break;
@@ -169,25 +226,25 @@ void Game::drawTodo() {
     int t_best, t_growth, t_poison, t_gate;
     
     if (this -> stage == 1) {
-        t_best = 1;
-        t_growth = 1;
-        t_poison = 1;
-        t_gate = 0;
+        t_best = 5;
+        t_growth = 5;
+        t_poison = 5;
+        t_gate = 3;
     } else if (this -> stage == 2) {
-        t_best = 1;
-        t_growth = 1;
-        t_poison = 1;
-        t_gate = 0;
+        t_best = 10;
+        t_growth = 5;
+        t_poison = 5;
+        t_gate = 5;
     } else if (this -> stage == 3) {
-        t_best = 1;
-        t_growth = 1;
-        t_poison = 1;
-        t_gate = 0;
+        t_best = 15;
+        t_growth = 10;
+        t_poison = 10;
+        t_gate = 5;
     } else {
-        t_best = 1;
-        t_growth = 1;
-        t_poison = 1;
-        t_gate = 0;
+        t_best = 15;
+        t_growth = 15;
+        t_poison = 15;
+        t_gate = 10;
     }
     
     //print "todo"
@@ -205,6 +262,44 @@ void Game::drawTodo() {
         this -> snake -> setDirection(0, 0);
         this -> end = this -> stage + 1;
     }
+}
+
+void Game::drawHowto() {
+    char *howto_1 = " _  _  _____      __  _____ ___";
+    char *howto_2 = "| || |/ _ \\ \\    / / |_   _/ _ \\";
+    char *howto_3 = "| __ | (_) \\ \\/\\/ /    | || (_) |";
+    char *howto_4 = "|_||_|\\___/ \\_/\\_/     |_| \\___/";
+    
+    //print howto
+    mvprintw(2, 23, howto_1);
+    mvprintw(3, 23, howto_2);
+    mvprintw(4, 23, howto_3);
+    mvprintw(5, 23, howto_4);
+    //print how to play
+    mvprintw(10, 27, "Play with the arrow keys");
+    mvprintw(12, 27, "+: Increase the length");
+    mvprintw(13, 27, "-: Decrease the length");
+    mvprintw(14, 27, "G: Go to the connected gate");
+    mvprintw(18, 21, "Press the spacebar to go to the main");
+    refresh();
+}
+
+void Game::drawClear() {
+    char *clear_1 = "               __  ______  __  __   ____  ________     __________";
+    char *clear_2 = "               \\ \\/ / __ \\/ / / /  / __ \\/  _/ __ \\   /  _/_  __/";
+    char *clear_3 = "                \\  / / / / / / /  / / / // // / / /   / /  / /";
+    char *clear_4 = "                / / /_/ / /_/ /  / /_/ // // /_/ /  _/ /  / /";
+    char *clear_5 = "               /_/\\____/\\____/  /_____/___/_____/  /___/ /_/";
+    
+    //print clear
+    mvprintw(9, 0, clear_1);
+    mvprintw(10, 0, clear_2);
+    mvprintw(11, 0, clear_3);
+    mvprintw(12, 0, clear_4);
+    mvprintw(13, 0, clear_5);
+    mvprintw(18, 21, "Press the spacebar to go to the main");
+    
+    refresh();
 }
 //move
 void Game::moveSnake() {
@@ -225,10 +320,32 @@ void Game::moveSnake() {
             this -> map[headX][headY] = 0;
             this -> poison++;
             break;
-            
+        case 5:
+            if (headX == this -> gateX_1) {
+                this -> snake -> setHeadPos(this -> gateX_2, this -> gateY_2);
+            } else if (headX == this -> gateX_2) {
+                this -> snake -> setHeadPos(this -> gateX_1, this -> gateY_1);
+            }
+            this->potalEvent();
+            break;
         default:
             break;
     }
+    //Gate check
+    int tmpX, tmpY;
+    if (this -> check_gate) {
+        for (int i = 0; i <= this->snake->getTop(); i++) {
+            this -> snake -> getSnakePos(i, &tmpX, &tmpY);
+            if ((tmpX == this->gateX_1 && tmpY == this->gateY_1) || (tmpX == this->gateX_2 && tmpY == this->gateY_2)) {
+                return;
+            }
+        }
+        this ->active_gate = 0;
+        this->map[this->gateX_1][this->gateY_1] = 1;
+        this->map[this->gateX_2][this->gateY_2] = 1;
+        this -> check_gate = 0;
+    }
+    
     
 }
 //event
@@ -250,6 +367,42 @@ int Game::eventDeath() {
     }
     
     return 0;
+}
+
+void Game::potalEvent() {
+    this -> gate++;
+    this -> check_gate = 1;
+    int headX, headY;
+    int dirx = this -> snake -> getDirX(), diry = this -> snake -> getDirY();
+    this -> snake -> getHeadPos(&headX, &headY);
+    //진입방향 체크
+    if (headX + dirx < this->row && headX + dirx >= 0 && headY + diry < this->column && headY + diry >= 0) {
+        if(this->map[headX + dirx][headY + diry] == 0) {
+            return;
+        }
+    }
+    //시계방항
+    if (headX + diry < this->row && headX + diry >= 0 && headY - dirx < this->column && headY - dirx >= 0) {
+        if(this->map[headX + diry][headY - dirx] == 0) {
+            this -> snake -> setDirection(diry, -dirx);
+            return;
+        }
+    }
+    //반시계
+    if (headX - diry < this->row && headX - diry >= 0 && headY + dirx < this->column && headY + dirx >= 0) {
+        if(this->map[headX - diry][headY + dirx] == 0) {
+            this -> snake -> setDirection(-diry, dirx);
+            return;
+        }
+    }
+    //역방향
+    if (headX - dirx < this->row && headX - dirx >= 0 && headY - diry < this->column && headY - diry >= 0) {
+        if(this->map[headX - dirx][headY - diry] == 0) {
+            return;
+        }
+    }
+    
+    
 }
 //makeItem
 void Game::makeItem() {
@@ -282,5 +435,22 @@ void Game::makeItem() {
             break;
         }
     }
+}
+
+void Game::makePotal() {
+    srand(time(NULL));
+    this -> active_gate = 1;
     
+    while(true) {
+        this -> gateX_1 = rand() % this->row;
+        this -> gateX_2 = rand() % this->row;
+        this -> gateY_1 = rand() % this->column;
+        this -> gateY_2 = rand() % this->column;
+        
+        if (this->map[this->gateX_1][this->gateY_1] == 1 && this->map[this->gateX_2][this->gateY_2] == 1) {
+            break;
+        }
+    }
+    this->map[this->gateX_1][this->gateY_1] = 5;
+    this->map[this->gateX_2][this->gateY_2] = 5;
 }

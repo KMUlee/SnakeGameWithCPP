@@ -33,6 +33,11 @@ int Snake::getDirY() {
 SnakeBody* Snake::getSnakeBody() {
     return this -> snakeBody;
 }
+
+void Snake::getSnakePos(int num, int *x, int *y) {
+    *x = this -> snakeBody[num].getX();
+    *y = this -> snakeBody[num].getY();
+}
 //setter
 void Snake::setTop(int top) {
     this -> top = top;
@@ -84,4 +89,9 @@ int Snake::eventDeath() {
 void Snake::getHeadPos(int *x, int *y) {
     *x = this -> snakeBody[0].getX();
     *y = this -> snakeBody[0].getY();
+}
+
+void Snake::setHeadPos(int x, int y) {
+    this -> snakeBody[0].setX(x);
+    this -> snakeBody[0].setY(y);
 }

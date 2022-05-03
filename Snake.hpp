@@ -26,9 +26,12 @@ public:
     int getDirX();
     int getDirY();
     SnakeBody* getSnakeBody();
+    void getHeadPos(int *x, int *y);
+    void getSnakePos(int num, int *x, int *y);
     //setter
     void setTop(int top);
     void setDirection(int x, int y);
+    void setHeadPos(int x, int y);
     //push
     void snakePush(int x, int y, char* shape);
     //pop
@@ -36,7 +39,7 @@ public:
     //event
     void snakeMove();
     int eventDeath();
-    void getHeadPos(int *x, int *y);
+
     //test
     void test();
     

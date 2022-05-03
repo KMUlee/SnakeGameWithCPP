@@ -24,7 +24,7 @@ void mainMenu() {
     //print select menu
     mvprintw(11, 30, "PRESS THE SPACEBAR");
     mvprintw(15, 37, "START");
-    mvprintw(17, 37, "RANKING");
+    mvprintw(17, 37, "HOW TO");
 }
 
 int main(){
@@ -60,7 +60,7 @@ int main(){
         }
         if(start) {
             game.setMode(mode);
-            game.gameInit(start == 0 ? 1 : start);
+            game.gameInit(start);
             start = game.GameStart();
         }
     }

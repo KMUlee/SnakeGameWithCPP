@@ -16,9 +16,7 @@ int** makeMap(int row, int column, int stage) {
                 map[i][j] = 1;
             } else
                 map[i][j] = 0;
-            printf("%d", map[i][j]);
         }
-        printf("\n");
     }
     
     map[0][0] = map[0][column-1] = map[row-1][column-1] = map[row-1][0] = 2;
@@ -27,12 +25,17 @@ int** makeMap(int row, int column, int stage) {
         for (int i = 0; i < row; i++) {
             map[i][column / 2] = 1;
         }
+        map[0][column/2] = 2;
+        map[row-1][column/2] = 2;
         if (stage >= 3) {
             for (int i = 0; i < column; i++) {
                 map[row/2][i] = 1;
             }
+            map[row/2][column/2] = 2;
+            map[row/2][0] = map[row/2][column-1] = 2;
             if (stage == 4) {
-                
+                map[row/4][column/4] = 1;
+                map[row/2 + row/4][column/2 + column/4] = 1;
             }
         }
     }

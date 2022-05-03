@@ -24,6 +24,8 @@ private:
     Item *item;
     int mode, row, column, stage, end;
     int best, growth, poison, gate;
+    int gateX_1, gateY_1, gateX_2, gateY_2;
+    int active_gate, check_gate, gate_time;
 public:
     //constructor
     Game(int row, int column);
@@ -37,12 +39,16 @@ public:
     void drawSnake();
     void drawScore();
     void drawTodo();
+    void drawHowto();
+    void drawClear();
     //move
     void moveSnake();
     int GameStart();
     //evnt
     int eventDeath();
     void makeItem();
+    void makePotal();
+    void potalEvent();
     //timer
 };
 
