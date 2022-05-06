@@ -321,9 +321,9 @@ void Game::moveSnake() {
             this -> poison++;
             break;
         case 5:
-            if (headX == this -> gateX_1) {
+            if (headX == this -> gateX_1 && headY == this -> gateY_1) {
                 this -> snake -> setHeadPos(this -> gateX_2, this -> gateY_2);
-            } else if (headX == this -> gateX_2) {
+            } else if (headX == this -> gateX_2 && headY == this -> gateY_2) {
                 this -> snake -> setHeadPos(this -> gateX_1, this -> gateY_1);
             }
             this->potalEvent();
@@ -375,6 +375,21 @@ void Game::potalEvent() {
     int headX, headY;
     int dirx = this -> snake -> getDirX(), diry = this -> snake -> getDirY();
     this -> snake -> getHeadPos(&headX, &headY);
+    //벽에 생성되었을 때
+    if (headX == 0) {
+        this -> snake -> setDirection(1, 0);
+        return;
+    } else if (headX == this -> row - 1) {
+        this -> snake -> setDirection(-1, 0);
+        return;
+    }
+    if(headY == 0) {
+        this -> snake -> setDirection(0, 1);
+        return;
+    } else if (headY == this -> column - 1) {
+        this -> snake -> setDirection(0, -1);
+        return;
+    }
     //진입방향 체크
     if (headX + dirx < this->row && headX + dirx >= 0 && headY + diry < this->column && headY + diry >= 0) {
         if(this->map[headX + dirx][headY + diry] == 0) {
