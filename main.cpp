@@ -25,6 +25,7 @@ void mainMenu() {
     mvprintw(11, 30, "PRESS THE SPACEBAR");
     mvprintw(15, 37, "START");
     mvprintw(17, 37, "HOW TO");
+    mvprintw(19, 37, "EXIT");
 }
 
 int main(){
@@ -34,6 +35,8 @@ int main(){
     Game game(N, M);
 
     initscr();
+    
+    resize_term(24, 80);
 
     curs_set(false);
     noecho();
@@ -51,10 +54,16 @@ int main(){
 
         switch (keyNum) {
             case KEY_UP:
+                mode = (mode == 0) ? 2 : mode - 1;
+                break;
             case KEY_DOWN:
-                mode = mode ? 0 : 1;
+                mode = (mode == 2) ? 0 : mode + 1;
                 break;
             case 32:
+                if (mode == 2) {
+                    endwin();
+                    return 0;
+                }
                 start = 1;
                 break;
         }
