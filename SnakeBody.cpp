@@ -1,33 +1,26 @@
-//
-//  SnakeBody.cpp
-//  cpp_algo
-//
-//
-//
-
 #include "SnakeBody.hpp"
 #include <stdlib.h>
 #include <string>
 
 using namespace std;
 //constructor
-SnakeBody::SnakeBody(int x, int y, char* shape) {
+SnakeBody::SnakeBody(int x, int y, const char *shape) {
     this -> x = x;
     this -> y = y;
-    this -> shape = shape;
+    strcpy(this -> shape, shape);
 }
 
 SnakeBody::SnakeBody() {
     this -> x = 0;
     this -> y = 0;
-    this -> shape = "";
+    this -> shape = new char[1] {'\0'};
 }
 //getter
-int SnakeBody::getX() {
+int SnakeBody::getX() const {
     return this -> x;
 }
 
-int SnakeBody::getY() {
+int SnakeBody::getY() const {
     return this -> y;
 }
 
@@ -43,7 +36,7 @@ void SnakeBody::setY(int y) {
     this -> y = y;
 }
 
-void SnakeBody::setShape(char* shape) {
-    this -> shape = shape;
+void SnakeBody::setShape(const char *shape) {
+    strcpy(this -> shape, shape);
 }
 

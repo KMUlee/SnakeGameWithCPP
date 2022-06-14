@@ -18,15 +18,15 @@ private:
 public:
     //constructor
     SnakeBody();
-    SnakeBody(int x, int y, char* shape);
+    SnakeBody(int x, int y, const char *shape);
     //getter
-    int getX();
-    int getY();
+    int getX() const;
+    int getY() const;
     char* getShape();
     //setter
     void setX(int x);
     void setY(int y);
-    void setShape(char* shape);
+    void setShape(const char *shape);
     
 };
 

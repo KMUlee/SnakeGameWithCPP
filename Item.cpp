@@ -17,15 +17,15 @@ Item::Item(int row, int column) {
     this -> column = column;
 }
 
-int Item::getX() {
+int Item::getX() const{
     return this -> x;
 }
 
-int Item::getY() {
+int Item::getY() const{
     return this -> y;
 }
 
-int Item::getItem() {
+int Item::getItem() const{
     return rand() % 2 + 3;
 }
 

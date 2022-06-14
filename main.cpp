@@ -1,4 +1,5 @@
 #include <ncurses.h>
+//#include <curses.h> 윈도우에서 동작시 주석을 풀어주시고 위에 헤더파일은 주석처리 해주세요
 #include <cstring>
 #include <iostream>
 #include <cstring>

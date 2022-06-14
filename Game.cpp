@@ -1,10 +1,3 @@
-//
-//  Game.cpp
-//  cpp_algo
-//
-//  Created by 이승원 on 2022/05/01.
-//
-
 #include "Game.hpp"
 
 #define ITEM_TIME 10
@@ -33,6 +26,7 @@ void Game::setStage(int stage) {
 void Game::gameInit(int stage) {
     //속성 초기화
     this -> best = 0;
+    this -> maxLength = 0;
     this -> growth = 0;
     this -> poison = 0;
     this -> gate = 0;
@@ -43,6 +37,13 @@ void Game::gameInit(int stage) {
     this -> snake -> setTop(-1);
     //map 초기화
     this -> map = makeMap(this -> row, this -> column, this -> stage);
+    for (int i = 0; i < this -> row; i++) {
+        for (int j = 0; j < this -> column; j++) {
+            if (this -> map[i][j] == 0) {
+                this -> maxLength++;
+            }
+        }
+    }
     //초기 뱀의 형태
     this -> snake -> snakePush(10, 10, "@");
     this -> snake -> snakePush(10, 11, "O");
@@ -158,7 +159,7 @@ int Game::GameStart() {
     return this -> end;
 }
 //draw
-void Game::drawMap() {
+void Game::drawMap() const{
     
     for (int i = 0; i < this -> row; i++) {
         for (int j = 0; j < this -> column; j++) {
@@ -188,7 +189,7 @@ void Game::drawMap() {
     refresh();
 }
 
-void Game::drawSnake() {
+void Game::drawSnake() const{
     SnakeBody* snakebody = this -> snake -> getSnakeBody();
     
     for (int i = 0; i <= this -> snake -> getTop(); i++) {
@@ -209,7 +210,7 @@ void Game::drawScore() {
     mvprintw(4, start_pos + 10, score_3);
     //print score
     this -> best = (this -> best < this -> snake -> getTop()) ? this -> snake -> getTop() : this -> best;
-    mvprintw(7, start_pos + 18, "B: %2d", this -> best + 1);
+    mvprintw(7, start_pos + 16, "B/M: %2d/%2d", this -> best + 1, this -> maxLength);
     mvprintw(8, start_pos + 18, "+: %2d", this -> growth);
     mvprintw(9, start_pos + 18, "-: %2d", this -> poison);
     mvprintw(10, start_pos + 18, "G: %2d", this -> gate);
@@ -253,7 +254,7 @@ void Game::drawTodo() {
     mvprintw(14, start_pos + 11, todo_3);
     mvprintw(15, start_pos + 11, todo_4);
     //print todo
-    mvprintw(18, start_pos + 17, "B: %2d[%c]", t_best, this -> best >= t_best ? 'V' : ' ');
+    mvprintw(18, start_pos + 17, "B: %2d[%c]", t_best, this -> best >= t_best-1 ? 'V' : ' ');
     mvprintw(19, start_pos + 17, "+: %2d[%c]", t_growth, this -> growth >= t_growth ? 'V' : ' ');
     mvprintw(20, start_pos + 17, "-: %2d[%c]", t_poison, this -> poison >= t_poison ? 'V' : ' ');
     mvprintw(21, start_pos + 17, "G: %2d[%c]", t_gate, this -> gate >= t_gate ? 'V' : ' ');
@@ -264,7 +265,7 @@ void Game::drawTodo() {
     }
 }
 
-void Game::drawHowto() {
+void Game::drawHowto() const{
     char *howto_1 = " _  _  _____      __  _____ ___";
     char *howto_2 = "| || |/ _ \\ \\    / / |_   _/ _ \\";
     char *howto_3 = "| __ | (_) \\ \\/\\/ /    | || (_) |";
@@ -284,7 +285,7 @@ void Game::drawHowto() {
     refresh();
 }
 
-void Game::drawClear() {
+void Game::drawClear() const{
     char *clear_1 = "               __  ______  __  __   ____  ________     __________";
     char *clear_2 = "               \\ \\/ / __ \\/ / / /  / __ \\/  _/ __ \\   /  _/_  __/";
     char *clear_3 = "                \\  / / / / / / /  / / / // // / / /   / /  / /";
@@ -349,7 +350,7 @@ void Game::moveSnake() {
     
 }
 //event
-int Game::eventDeath() {
+int Game::eventDeath() const{
     //뱀의 머리가 몸통이랑 닿을 때
     if (this -> snake -> eventDeath()) {
         return 1;

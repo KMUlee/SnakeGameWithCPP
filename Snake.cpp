@@ -18,23 +18,23 @@ Snake::Snake(int num) {
     this -> dir_y = -1;
 }
 //getter
-int Snake::getTop() {
+int Snake::getTop() const{
     return this -> top;
 }
 
-int Snake::getDirX() {
+int Snake::getDirX() const{
     return this -> dir_x;
 }
 
-int Snake::getDirY() {
+int Snake::getDirY() const{
     return this -> dir_y;
 }
 
-SnakeBody* Snake::getSnakeBody() {
+SnakeBody* Snake::getSnakeBody() const{
     return this -> snakeBody;
 }
 
-void Snake::getSnakePos(int num, int *x, int *y) {
+void Snake::getSnakePos(int num, int *x, int *y) const{
     *x = this -> snakeBody[num].getX();
     *y = this -> snakeBody[num].getY();
 }
@@ -49,7 +49,7 @@ void Snake::setDirection(int x, int y) {
 }
 
 //push
-void Snake::snakePush(int x, int y, char* shape) {
+void Snake::snakePush(int x, int y, const char* shape) {
     this -> top++;
     this -> snakeBody[this -> top].setX(x);
     this -> snakeBody[this -> top].setY(y);
@@ -72,7 +72,7 @@ void Snake::snakeMove() {
     this -> snakeBody[0].setY(this -> snakeBody[0].getY() + this -> dir_y);
 }
 //event
-int Snake::eventDeath() {
+int Snake::eventDeath() const{
     int headX, headY;
     headX = this -> snakeBody[0].getX();
     headY = this -> snakeBody[0].getY();
@@ -86,7 +86,7 @@ int Snake::eventDeath() {
     return 0;
 }
 
-void Snake::getHeadPos(int *x, int *y) {
+void Snake::getHeadPos(int *x, int *y) const{
     *x = this -> snakeBody[0].getX();
     *y = this -> snakeBody[0].getY();
 }

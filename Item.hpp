@@ -23,9 +23,9 @@ public:
     Item();
     Item(int row, int column);
     //getter
-    int getX();
-    int getY();
-    int getItem();
+    int getX() const;
+    int getY() const;
+    int getItem() const;
     //randSet
     void randSet();
     

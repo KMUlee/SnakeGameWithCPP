@@ -23,7 +23,7 @@ private:
     int** map;
     Item *item;
     int mode, row, column, stage, end;
-    int best, growth, poison, gate;
+    int best, growth, poison, gate, maxLength;
     int gateX_1, gateY_1, gateX_2, gateY_2;
     int active_gate, check_gate, gate_time;
 public:
@@ -35,17 +35,17 @@ public:
     //
     void gameInit(int stage);
     //draw
-    void drawMap();
-    void drawSnake();
+    void drawMap() const;
+    void drawSnake() const;
     void drawScore();
     void drawTodo();
-    void drawHowto();
-    void drawClear();
+    void drawHowto() const;
+    void drawClear() const;
     //move
     void moveSnake();
     int GameStart();
     //evnt
-    int eventDeath();
+    int eventDeath() const;
     void makeItem();
     void makePotal();
     void potalEvent();

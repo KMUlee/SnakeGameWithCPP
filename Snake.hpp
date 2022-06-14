@@ -22,26 +22,23 @@ public:
     //constructor
     Snake(int num);
     //getter
-    int getTop();
-    int getDirX();
-    int getDirY();
-    SnakeBody* getSnakeBody();
-    void getHeadPos(int *x, int *y);
-    void getSnakePos(int num, int *x, int *y);
+    int getTop() const;
+    int getDirX() const;
+    int getDirY() const;
+    SnakeBody* getSnakeBody() const;
+    void getHeadPos(int *x, int *y) const;
+    void getSnakePos(int num, int *x, int *y) const;
     //setter
     void setTop(int top);
     void setDirection(int x, int y);
     void setHeadPos(int x, int y);
     //push
-    void snakePush(int x, int y, char* shape);
+    void snakePush(int x, int y, const char* shape);
     //pop
     void snakePop();
     //event
     void snakeMove();
-    int eventDeath();
-
-    //test
-    void test();
+    int eventDeath() const;
     
 };
 
