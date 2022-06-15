@@ -25,7 +25,6 @@ void Game::setStage(int stage) {
 //
 void Game::gameInit(int stage) {
     //속성 초기화
-    this -> best = 0;
     this -> maxLength = 0;
     this -> growth = 0;
     this -> poison = 0;
@@ -65,7 +64,8 @@ int Game::GameStart() {
     
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     
-    while(this -> mode == 1) {\
+    //howto를 그린다.
+    while(this -> mode == 1) {
         clear();
         this -> drawHowto();
         getKey = getch();
@@ -75,7 +75,7 @@ int Game::GameStart() {
             break;
         }
     }
-    
+    //게임 클리어 화면
     while (this -> stage == 5) {
         clear();
         this -> drawClear();
@@ -87,7 +87,7 @@ int Game::GameStart() {
             break;
         }
     }
-    
+    //게임 시작
     while(this -> mode == 0) {
         if (end) {
             break;
@@ -114,7 +114,7 @@ int Game::GameStart() {
                 this -> poison++;
                 this -> growth++;
                 this -> gate++;
-                this -> best++;
+                this -> snake -> snakePush(-1, -1, "");
                 break;
         }
         //죽음 이벤트
@@ -209,8 +209,7 @@ void Game::drawScore() {
     mvprintw(3, start_pos + 10, score_2);
     mvprintw(4, start_pos + 10, score_3);
     //print score
-    this -> best = (this -> best < this -> snake -> getTop()) ? this -> snake -> getTop() : this -> best;
-    mvprintw(7, start_pos + 16, "B/M: %2d/%2d", this -> best + 1, this -> maxLength);
+    mvprintw(7, start_pos + 16, "B/M: %2d/%2d", this -> snake -> getTop() + 1, this -> maxLength);
     mvprintw(8, start_pos + 18, "+: %2d", this -> growth);
     mvprintw(9, start_pos + 18, "-: %2d", this -> poison);
     mvprintw(10, start_pos + 18, "G: %2d", this -> gate);
@@ -254,12 +253,12 @@ void Game::drawTodo() {
     mvprintw(14, start_pos + 11, todo_3);
     mvprintw(15, start_pos + 11, todo_4);
     //print todo
-    mvprintw(18, start_pos + 17, "B: %2d[%c]", t_best, this -> best >= t_best-1 ? 'V' : ' ');
+    mvprintw(18, start_pos + 17, "B: %2d[%c]", t_best, this -> snake -> getTop() >= t_best-1 ? 'V' : ' ');
     mvprintw(19, start_pos + 17, "+: %2d[%c]", t_growth, this -> growth >= t_growth ? 'V' : ' ');
     mvprintw(20, start_pos + 17, "-: %2d[%c]", t_poison, this -> poison >= t_poison ? 'V' : ' ');
     mvprintw(21, start_pos + 17, "G: %2d[%c]", t_gate, this -> gate >= t_gate ? 'V' : ' ');
     
-    if (this -> best >= t_best && this -> growth >= t_growth && this -> poison >= t_poison && this -> gate >= t_gate) {
+    if (this -> snake -> getTop() >= t_best-1 && this -> growth >= t_growth && this -> poison >= t_poison && this -> gate >= t_gate) {
         this -> snake -> setDirection(0, 0);
         this -> end = this -> stage + 1;
     }
@@ -464,7 +463,9 @@ void Game::makePotal() {
         this -> gateY_2 = rand() % this->column;
         
         if (this->map[this->gateX_1][this->gateY_1] == 1 && this->map[this->gateX_2][this->gateY_2] == 1) {
-            break;
+            if (this -> gateX_1 != this -> gateX_2 || this -> gateY_1 != this -> gateY_2) {
+                break;
+            }
         }
     }
     this->map[this->gateX_1][this->gateY_1] = 5;

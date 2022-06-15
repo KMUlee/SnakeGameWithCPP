@@ -7,7 +7,6 @@
 
 #include "Snake.hpp"
 #include <stdlib.h>
-#include <string>
 
 using namespace std;
 //constructor
