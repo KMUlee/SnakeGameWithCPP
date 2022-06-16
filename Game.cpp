@@ -392,27 +392,27 @@ void Game::potalEvent() {
     }
     //진입방향 체크
     if (headX + dirx < this->row && headX + dirx >= 0 && headY + diry < this->column && headY + diry >= 0) {
-        if(this->map[headX + dirx][headY + diry] == 0) {
+        if(this->map[headX + dirx][headY + diry] != 1) {
             return;
         }
     }
     //시계방항
     if (headX + diry < this->row && headX + diry >= 0 && headY - dirx < this->column && headY - dirx >= 0) {
-        if(this->map[headX + diry][headY - dirx] == 0) {
+        if(this->map[headX + diry][headY - dirx] != 1) {
             this -> snake -> setDirection(diry, -dirx);
             return;
         }
     }
     //반시계
     if (headX - diry < this->row && headX - diry >= 0 && headY + dirx < this->column && headY + dirx >= 0) {
-        if(this->map[headX - diry][headY + dirx] == 0) {
+        if(this->map[headX - diry][headY + dirx] != 1) {
             this -> snake -> setDirection(-diry, dirx);
             return;
         }
     }
     //역방향
     if (headX - dirx < this->row && headX - dirx >= 0 && headY - diry < this->column && headY - diry >= 0) {
-        if(this->map[headX - dirx][headY - diry] == 0) {
+        if(this->map[headX - dirx][headY - diry] != 1) {
             return;
         }
     }
